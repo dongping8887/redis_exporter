@@ -112,8 +112,13 @@ func (e *Exporter) extractCheckKeyMetrics(ch chan<- prometheus.Metric, c redis.C
 			log.Debugf("Key '%s' not found when trying to get type and size: using default '0.0'", k.key)
 			e.registerConstMetricGauge(ch, "key_size", 0.0, dbLabel, k.key)
 		case nil:
-			e.registerConstMetricGauge(ch, "key_size", info.size, dbLabel, k.key)
+			// modify by dongping 20220907 begin
+			if info.size >= 10000 {
+				e.registerConstMetricGauge(ch, "key_size", info.size, dbLabel, k.key)
+			}
+			// modify by dongping 20220907 end
 
+			// delete by dongping 20220907 begin
 			// Only run on single value strings
 			//if info.keyType == "string" {
 			//	if strVal, err := redis.String(doRedisCmd(c, "GET", k.key)); err == nil {
@@ -126,6 +131,7 @@ func (e *Exporter) extractCheckKeyMetrics(ch chan<- prometheus.Metric, c redis.C
 			//		}
 			//	}
 			//}
+			// delete by dongping 20220907 end
 		default:
 			log.Error(err)
 		}
