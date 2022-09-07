@@ -115,17 +115,17 @@ func (e *Exporter) extractCheckKeyMetrics(ch chan<- prometheus.Metric, c redis.C
 			e.registerConstMetricGauge(ch, "key_size", info.size, dbLabel, k.key)
 
 			// Only run on single value strings
-			if info.keyType == "string" {
-				if strVal, err := redis.String(doRedisCmd(c, "GET", k.key)); err == nil {
-					if val, err := strconv.ParseFloat(strVal, 64); err == nil {
-						// Only record value metric if value is float-y
-						e.registerConstMetricGauge(ch, "key_value", val, dbLabel, k.key)
-					} else {
-						// if it's not float-y then we'll record the value as a string label
-						e.registerConstMetricGauge(ch, "key_value_as_string", 1.0, dbLabel, k.key, strVal)
-					}
-				}
-			}
+			//if info.keyType == "string" {
+			//	if strVal, err := redis.String(doRedisCmd(c, "GET", k.key)); err == nil {
+			//		if val, err := strconv.ParseFloat(strVal, 64); err == nil {
+			//			// Only record value metric if value is float-y
+			//			e.registerConstMetricGauge(ch, "key_value", val, dbLabel, k.key)
+			//		} else {
+			//			// if it's not float-y then we'll record the value as a string label
+			//			e.registerConstMetricGauge(ch, "key_value_as_string", 1.0, dbLabel, k.key, strVal)
+			//		}
+			//	}
+			//}
 		default:
 			log.Error(err)
 		}
